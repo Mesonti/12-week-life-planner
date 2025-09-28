@@ -1,4 +1,4 @@
-/* Планировщик жизни на 12 недель - стили */
+/* Планировщик жизни на 12 недель - стили (обновленная версия) */
 
 :root {
     /* Цвета сфер жизни */
@@ -72,6 +72,7 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
+    padding: var(--spacing-md) 0;
 }
 
 .header__title {
@@ -179,7 +180,7 @@ body {
 /* Сетка сфер */
 .spheres-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: var(--spacing-lg);
 }
 
@@ -229,6 +230,49 @@ body {
     content: "• ";
     color: var(--primary-color);
     font-weight: bold;
+}
+
+/* Действия в карточке сферы */
+.sphere-card__actions {
+    margin-bottom: var(--spacing-md);
+}
+
+/* Кнопка "Добавить цель" */
+.btn-add-goal {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-add-goal:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-add-goal:active {
+    transform: translateY(0);
+}
+
+.btn-add-goal__icon {
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
 }
 
 /* Недели */
@@ -431,6 +475,7 @@ body {
 .form-textarea:focus {
     outline: none;
     border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
 }
 
 .form-textarea {
@@ -457,6 +502,7 @@ body {
 .btn--primary:hover {
     background: #45a049;
     transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
 }
 
 .btn--secondary {
@@ -514,6 +560,8 @@ body {
     box-shadow: var(--shadow-lg);
     max-width: 500px;
     width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
     position: relative;
 }
 
@@ -524,10 +572,99 @@ body {
     font-size: 1.5rem;
     cursor: pointer;
     color: var(--text-secondary);
+    background: none;
+    border: none;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
 }
 
 .modal__close:hover {
     color: var(--text-primary);
+    background: var(--border);
+}
+
+/* Форма добавления цели */
+.add-goal-form {
+    margin-top: var(--spacing-md);
+}
+
+.modal-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.modal-actions .btn {
+    flex: 1;
+}
+
+/* Уведомления */
+.notification {
+    position: fixed;
+    top: var(--spacing-lg);
+    right: var(--spacing-lg);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    z-index: 1100;
+    transform: translateX(400px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    max-width: 350px;
+    min-width: 250px;
+}
+
+.notification--show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.notification--success {
+    border-left: 4px solid var(--success-color);
+}
+
+.notification--error {
+    border-left: 4px solid var(--error-color);
+}
+
+.notification--info {
+    border-left: 4px solid var(--secondary-color);
+}
+
+.notification__text {
+    flex: 1;
+    font-size: 0.9rem;
+}
+
+.notification__close {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.notification__close:hover {
+    color: var(--text-primary);
+    background: var(--border);
 }
 
 /* Адаптивность */
@@ -579,6 +716,27 @@ body {
         margin-right: 0;
         margin-bottom: var(--spacing-sm);
     }
+
+    .modal__content {
+        margin: var(--spacing-md);
+        width: calc(100% - 2 * var(--spacing-md));
+    }
+
+    .modal-actions {
+        flex-direction: column;
+    }
+
+    .notification {
+        top: var(--spacing-sm);
+        right: var(--spacing-sm);
+        left: var(--spacing-sm);
+        max-width: none;
+        transform: translateY(-100px);
+    }
+
+    .notification--show {
+        transform: translateY(0);
+    }
 }
 
 @media (max-width: 480px) {
@@ -593,6 +751,15 @@ body {
     .nav__btn {
         padding: 6px 8px;
         font-size: 0.7rem;
+    }
+
+    .sphere-card {
+        padding: var(--spacing-md);
+    }
+
+    .btn-add-goal {
+        font-size: 0.8rem;
+        padding: var(--spacing-sm);
     }
 }
 
@@ -610,6 +777,22 @@ body {
 
 .tab-content--active {
     animation: slideIn 0.3s ease-out;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.btn-add-goal:hover .btn-add-goal__icon {
+    animation: pulse 0.3s ease;
 }
 
 /* Утилитарные классы */
