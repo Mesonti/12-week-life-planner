@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Планировщик жизни на 12 недель</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="description" content="Простой планировщик для развития в 9 сферах жизни на 12 недель">
+
+    <!-- PWA мета-теги -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Планировщик 12 недель">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+</head>
+<body>
+    <div class="app" id="app">
+        <header class="header">
+            <div class="container">
+                <h1 class="header__title">📅 Планировщик на 12 недель</h1>
+                <nav class="nav">
+                    <button class="nav__btn nav__btn--active" data-tab="dashboard">Главная</button>
+                    <button class="nav__btn" data-tab="weeks">Недели</button>
+                    <button class="nav__btn" data-tab="habits">Привычки</button>
+                    <button class="nav__btn" data-tab="retrospective">Ретроспектива</button>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="container">
+                <!-- Главная панель -->
+                <section id="dashboard" class="tab-content tab-content--active">
+                    <div class="welcome">
+                        <h2>🎯 Добро пожаловать в ваш планировщик!</h2>
+                        <p class="welcome__subtitle">Развивайтесь в 9 сферах жизни и отслеживайте прогресс</p>
+
+                        <div class="stats">
+                            <div class="stats__card">
+                                <h3>Неделя <span id="currentWeek">1</span> из 12</h3>
+                                <div class="progress-bar">
+                                    <div class="progress-bar__fill" id="overallProgress"></div>
+                                </div>
+                                <span class="progress-percentage" id="overallPercentage">0%</span>
+                            </div>
+                        </div>
+
+                        <div class="spheres-grid" id="spheresGrid">
+                            <!-- Сферы жизни генерируются JavaScript -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Раздел недель -->
+                <section id="weeks" class="tab-content">
+                    <div class="week-header">
+                        <button class="btn btn--secondary" id="prevWeek">← Предыдущая</button>
+                        <h2>Неделя <span id="weekNumber">1</span></h2>
+                        <button class="btn btn--secondary" id="nextWeek">Следующая →</button>
+                    </div>
+
+                    <div class="week-dates" id="weekDates">
+                        29.09.2025 — 05.10.2025
+                    </div>
+
+                    <div class="tasks-container" id="tasksContainer">
+                        <!-- Задачи генерируются JavaScript -->
+                    </div>
+                </section>
+
+                <!-- Раздел привычек -->
+                <section id="habits" class="tab-content">
+                    <h2>📊 Ежедневные привычки</h2>
+                    <div class="habits-grid" id="habitsGrid">
+                        <!-- Привычки генерируются JavaScript -->
+                    </div>
+                </section>
+
+                <!-- Ретроспектива -->
+                <section id="retrospective" class="tab-content">
+                    <h2>🔍 Еженедельная ретроспектива</h2>
+                    <div class="retrospective-form" id="retrospectiveForm">
+                        <!-- Форма ретроспективы генерируется JavaScript -->
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Кнопки управления данными -->
+        <div class="data-controls">
+            <button class="btn btn--outline" id="exportData">📥 Экспорт данных</button>
+            <button class="btn btn--outline" id="importData">📤 Импорт данных</button>
+            <input type="file" id="importFile" accept=".json" style="display: none;">
+        </div>
+    </div>
+
+    <!-- Модальное окно -->
+    <div class="modal" id="modal">
+        <div class="modal__content">
+            <span class="modal__close" id="modalClose">&times;</span>
+            <div class="modal__body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

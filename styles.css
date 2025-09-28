@@ -1,0 +1,638 @@
+/* Планировщик жизни на 12 недель - стили */
+
+:root {
+    /* Цвета сфер жизни */
+    --health-color: #4CAF50;
+    --career-color: #2196F3;
+    --finance-color: #FF9800;
+    --relationships-color: #E91E63;
+    --social-color: #9C27B0;
+    --development-color: #795548;
+    --confectionery-color: #F44336;
+    --leisure-color: #009688;
+    --spirituality-color: #673AB7;
+
+    /* Основные цвета */
+    --primary-color: #4CAF50;
+    --secondary-color: #2196F3;
+    --success-color: #4CAF50;
+    --warning-color: #FF9800;
+    --error-color: #F44336;
+
+    /* Нейтральные цвета */
+    --text-primary: #212121;
+    --text-secondary: #757575;
+    --text-disabled: #BDBDBD;
+    --background: #FAFAFA;
+    --surface: #FFFFFF;
+    --border: #E0E0E0;
+
+    /* Тени */
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+
+    /* Скругления */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    /* Размеры */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+}
+
+/* Сброс стилей */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--background);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+/* Заголовок */
+.header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header__title {
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-md);
+    color: var(--primary-color);
+}
+
+/* Навигация */
+.nav {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+.nav__btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 2px solid var(--border);
+    background: transparent;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.nav__btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.nav__btn--active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+/* Основной контент */
+.main {
+    padding: var(--spacing-lg) 0;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content--active {
+    display: block;
+}
+
+/* Приветствие */
+.welcome h2 {
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.8rem;
+}
+
+.welcome__subtitle {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+    font-size: 1.1rem;
+}
+
+/* Статистика */
+.stats {
+    margin-bottom: var(--spacing-xl);
+}
+
+.stats__card {
+    background: var(--surface);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+}
+
+.stats__card h3 {
+    margin-bottom: var(--spacing-md);
+    font-size: 1.3rem;
+}
+
+/* Прогресс-бар */
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: var(--spacing-sm);
+}
+
+.progress-bar__fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--success-color), var(--primary-color));
+    border-radius: 10px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.progress-percentage {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--primary-color);
+}
+
+/* Сетка сфер */
+.spheres-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.sphere-card {
+    background: var(--surface);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border-left: 4px solid var(--primary-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sphere-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.sphere-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.sphere-card__title {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.sphere-card__percentage {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.sphere-card__goals {
+    list-style: none;
+    margin-bottom: var(--spacing-md);
+}
+
+.sphere-card__goals li {
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.sphere-card__goals li:before {
+    content: "• ";
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+/* Недели */
+.week-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.week-header h2 {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+}
+
+.week-dates {
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+}
+
+/* Задачи */
+.tasks-container {
+    display: grid;
+    gap: var(--spacing-lg);
+}
+
+.task-group {
+    background: var(--surface);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.task-group__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--border);
+}
+
+.task-group__title {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.task-group__progress {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.tasks-list {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+}
+
+.task-item:hover {
+    border-color: var(--primary-color);
+}
+
+.task-item--completed {
+    background: rgba(76, 175, 80, 0.05);
+    border-color: var(--success-color);
+}
+
+.task-checkbox {
+    width: 20px;
+    height: 20px;
+    margin-right: var(--spacing-md);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.task-info {
+    flex-grow: 1;
+}
+
+.task-name {
+    font-weight: 500;
+    margin-bottom: var(--spacing-xs);
+}
+
+.task-details {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* Привычки */
+.habits-grid {
+    display: grid;
+    gap: var(--spacing-lg);
+}
+
+.habit-card {
+    background: var(--surface);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.habit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.habit-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.habit-streak {
+    background: var(--primary-color);
+    color: white;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.habit-calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
+}
+
+.habit-day {
+    aspect-ratio: 1;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.habit-day:hover {
+    border-color: var(--primary-color);
+}
+
+.habit-day--completed {
+    background: var(--success-color);
+    border-color: var(--success-color);
+    color: white;
+}
+
+.habit-day--today {
+    border-color: var(--secondary-color);
+    border-width: 3px;
+}
+
+/* Ретроспектива */
+.retrospective-form {
+    background: var(--surface);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-label {
+    display: block;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    padding: var(--spacing-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Кнопки */
+.btn {
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.btn--primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn--primary:hover {
+    background: #45a049;
+    transform: translateY(-1px);
+}
+
+.btn--secondary {
+    background: var(--text-secondary);
+    color: white;
+}
+
+.btn--secondary:hover {
+    background: #616161;
+}
+
+.btn--outline {
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn--outline:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Управление данными */
+.data-controls {
+    position: fixed;
+    bottom: var(--spacing-lg);
+    right: var(--spacing-lg);
+    display: flex;
+    gap: var(--spacing-sm);
+    z-index: 50;
+}
+
+/* Модальное окно */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal--active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal__content {
+    background: var(--surface);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+}
+
+.modal__close {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+}
+
+.modal__close:hover {
+    color: var(--text-primary);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 var(--spacing-sm);
+    }
+
+    .week-header {
+        text-align: center;
+    }
+
+    .week-header h2 {
+        font-size: 1.5rem;
+        order: 1;
+        width: 100%;
+    }
+
+    .nav {
+        justify-content: center;
+    }
+
+    .nav__btn {
+        padding: var(--spacing-sm);
+        font-size: 0.8rem;
+    }
+
+    .spheres-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .data-controls {
+        position: static;
+        justify-content: center;
+        margin-top: var(--spacing-xl);
+    }
+
+    .habit-calendar {
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+    }
+
+    .task-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .task-checkbox {
+        margin-right: 0;
+        margin-bottom: var(--spacing-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .header__title {
+        font-size: 1.2rem;
+    }
+
+    .welcome h2 {
+        font-size: 1.5rem;
+    }
+
+    .nav__btn {
+        padding: 6px 8px;
+        font-size: 0.7rem;
+    }
+}
+
+/* Анимации */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tab-content--active {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Утилитарные классы */
+.text-success {
+    color: var(--success-color);
+}
+
+.text-warning {
+    color: var(--warning-color);
+}
+
+.text-error {
+    color: var(--error-color);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mb-lg {
+    margin-bottom: var(--spacing-lg);
+}
+
+.hidden {
+    display: none;
+}
