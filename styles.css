@@ -244,7 +244,6 @@ body {
     gap: var(--spacing-sm);
     width: 100%;
     padding: var(--spacing-sm) var(--spacing-md);
-    background: transparent;
     border: 2px solid var(--primary-color);
     color: var(--primary-color);
     border-radius: var(--radius-md);
