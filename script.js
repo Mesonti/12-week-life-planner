@@ -1,4 +1,4 @@
-// Планировщик жизни на 12 недель - основная логика
+// Планировщик жизни на 12 недель - основная логика (обновленная версия)
 class LifePlanner {
     constructor() {
         this.currentWeek = 1;
@@ -143,14 +143,14 @@ class LifePlanner {
         });
 
         // Навигация по неделям
-        document.getElementById('prevWeek').addEventListener('click', () => {
+        document.getElementById('prevWeek')?.addEventListener('click', () => {
             if (this.currentWeek > 1) {
                 this.currentWeek--;
                 this.updateWeeksView();
             }
         });
 
-        document.getElementById('nextWeek').addEventListener('click', () => {
+        document.getElementById('nextWeek')?.addEventListener('click', () => {
             if (this.currentWeek < 12) {
                 this.currentWeek++;
                 this.updateWeeksView();
@@ -158,24 +158,24 @@ class LifePlanner {
         });
 
         // Экспорт/импорт данных
-        document.getElementById('exportData').addEventListener('click', () => {
+        document.getElementById('exportData')?.addEventListener('click', () => {
             this.exportData();
         });
 
-        document.getElementById('importData').addEventListener('click', () => {
+        document.getElementById('importData')?.addEventListener('click', () => {
             document.getElementById('importFile').click();
         });
 
-        document.getElementById('importFile').addEventListener('change', (e) => {
+        document.getElementById('importFile')?.addEventListener('change', (e) => {
             this.importData(e.target.files[0]);
         });
 
         // Закрытие модального окна
-        document.getElementById('modalClose').addEventListener('click', () => {
+        document.getElementById('modalClose')?.addEventListener('click', () => {
             this.closeModal();
         });
 
-        document.getElementById('modal').addEventListener('click', (e) => {
+        document.getElementById('modal')?.addEventListener('click', (e) => {
             if (e.target.id === 'modal') {
                 this.closeModal();
             }
@@ -187,13 +187,13 @@ class LifePlanner {
         document.querySelectorAll('.nav__btn').forEach(btn => {
             btn.classList.remove('nav__btn--active');
         });
-        document.querySelector(`[data-tab="${tabName}"]`).classList.add('nav__btn--active');
+        document.querySelector(`[data-tab="${tabName}"]`)?.classList.add('nav__btn--active');
 
         // Обновляем активный контент
         document.querySelectorAll('.tab-content').forEach(content => {
             content.classList.remove('tab-content--active');
         });
-        document.getElementById(tabName).classList.add('tab-content--active');
+        document.getElementById(tabName)?.classList.add('tab-content--active');
 
         // Обновляем данные в зависимости от таба
         if (tabName === 'dashboard') {
@@ -217,13 +217,15 @@ class LifePlanner {
 
         // Обновляем сферы
         const spheresGrid = document.getElementById('spheresGrid');
-        spheresGrid.innerHTML = '';
+        if (spheresGrid) {
+            spheresGrid.innerHTML = '';
 
-        this.spheres.forEach(sphere => {
-            const progress = this.calculateSphereProgress(sphere.name);
-            const card = this.createSphereCard(sphere, progress);
-            spheresGrid.appendChild(card);
-        });
+            this.spheres.forEach(sphere => {
+                const progress = this.calculateSphereProgress(sphere.name);
+                const card = this.createSphereCard(sphere, progress);
+                spheresGrid.appendChild(card);
+            });
+        }
     }
 
     createSphereCard(sphere, progress) {
@@ -233,6 +235,10 @@ class LifePlanner {
 
         const progressColor = progress >= 70 ? '#4CAF50' : progress >= 40 ? '#FF9800' : '#F44336';
 
+        // Получаем кастомные цели из localStorage
+        const customGoals = this.getCustomGoals(sphere.name);
+        const allGoals = [...sphere.goals, ...customGoals];
+
         card.innerHTML = `
             <div class="sphere-card__header">
                 <h3 class="sphere-card__title">${sphere.name}</h3>
@@ -241,18 +247,156 @@ class LifePlanner {
                 </span>
             </div>
             <ul class="sphere-card__goals">
-                ${sphere.goals.map(goal => `<li>${goal}</li>`).join('')}
+                ${allGoals.map(goal => `<li>${goal}</li>`).join('')}
             </ul>
+            <div class="sphere-card__actions">
+                <button class="btn-add-goal" data-sphere="${sphere.name}">
+                    <span class="btn-add-goal__icon">+</span>
+                    Добавить цель
+                </button>
+            </div>
             <div class="progress-bar">
                 <div class="progress-bar__fill" style="width: ${progress}%; background: ${progressColor}"></div>
             </div>
         `;
 
+        // Добавляем обработчик для кнопки добавления цели
+        const addButton = card.querySelector('.btn-add-goal');
+        addButton.addEventListener('click', () => {
+            this.showAddGoalModal(sphere.name);
+        });
+
         return card;
     }
 
+    getCustomGoals(sphereName) {
+        if (!this.data.customGoals) {
+            this.data.customGoals = {};
+        }
+        return this.data.customGoals[sphereName] || [];
+    }
+
+    addCustomGoal(sphereName, goal) {
+        if (!this.data.customGoals) {
+            this.data.customGoals = {};
+        }
+        if (!this.data.customGoals[sphereName]) {
+            this.data.customGoals[sphereName] = [];
+        }
+        this.data.customGoals[sphereName].push(goal);
+        this.saveData();
+    }
+
+    showAddGoalModal(sphereName) {
+        const modalBody = document.getElementById('modalBody');
+        modalBody.innerHTML = `
+            <h3>✨ Добавить цель в сферу "${sphereName}"</h3>
+            <div class="add-goal-form">
+                <div class="form-group">
+                    <label class="form-label">Название цели</label>
+                    <input type="text" 
+                           class="form-input" 
+                           id="newGoalTitle"
+                           placeholder="Например: Изучить английский 30 мин/день"
+                           maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Описание (опционально)</label>
+                    <textarea class="form-textarea" 
+                              id="newGoalDescription"
+                              placeholder="Дополнительные детали цели..."
+                              rows="3"
+                              maxlength="200"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn--primary" onclick="app.saveNewGoal('${sphereName}')">
+                        ➕ Добавить цель
+                    </button>
+                    <button class="btn btn--secondary" onclick="app.closeModal()">
+                        Отмена
+                    </button>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('modal').classList.add('modal--active');
+
+        // Фокус на поле ввода
+        setTimeout(() => {
+            document.getElementById('newGoalTitle')?.focus();
+        }, 100);
+
+        // Обработка Enter
+        document.getElementById('newGoalTitle')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                this.saveNewGoal(sphereName);
+            }
+        });
+    }
+
+    saveNewGoal(sphereName) {
+        const title = document.getElementById('newGoalTitle')?.value.trim();
+        const description = document.getElementById('newGoalDescription')?.value.trim();
+
+        if (!title) {
+            alert('Пожалуйста, введите название цели');
+            return;
+        }
+
+        // Формируем текст цели
+        let goalText = title;
+        if (description) {
+            goalText += ` (${description})`;
+        }
+
+        this.addCustomGoal(sphereName, goalText);
+        this.closeModal();
+        this.updateDashboard();
+
+        // Показываем уведомление об успехе
+        this.showNotification(`Цель добавлена в сферу "${sphereName}"!`, 'success');
+    }
+
+    showNotification(message, type = 'info') {
+        // Создаем уведомление
+        const notification = document.createElement('div');
+        notification.className = `notification notification--${type}`;
+        notification.innerHTML = `
+            <span class="notification__text">${message}</span>
+            <button class="notification__close">&times;</button>
+        `;
+
+        // Добавляем на страницу
+        document.body.appendChild(notification);
+
+        // Показываем анимацию
+        setTimeout(() => notification.classList.add('notification--show'), 10);
+
+        // Автоматическое скрытие через 4 секунды
+        setTimeout(() => {
+            this.hideNotification(notification);
+        }, 4000);
+
+        // Обработчик закрытия
+        notification.querySelector('.notification__close').addEventListener('click', () => {
+            this.hideNotification(notification);
+        });
+    }
+
+    hideNotification(notification) {
+        notification.classList.remove('notification--show');
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }
+
     updateWeeksView() {
-        document.getElementById('weekNumber').textContent = this.currentWeek;
+        const weekNumberEl = document.getElementById('weekNumber');
+        if (weekNumberEl) {
+            weekNumberEl.textContent = this.currentWeek;
+        }
 
         // Обновляем даты недели
         const weekStart = new Date(this.startDate);
@@ -260,8 +404,10 @@ class LifePlanner {
         const weekEnd = new Date(weekStart);
         weekEnd.setDate(weekEnd.getDate() + 6);
 
-        document.getElementById('weekDates').textContent = 
-            `${this.formatDate(weekStart)} — ${this.formatDate(weekEnd)}`;
+        const weekDatesEl = document.getElementById('weekDates');
+        if (weekDatesEl) {
+            weekDatesEl.textContent = `${this.formatDate(weekStart)} — ${this.formatDate(weekEnd)}`;
+        }
 
         // Группируем задачи по сферам
         const tasksBySphere = {};
@@ -274,40 +420,42 @@ class LifePlanner {
 
         // Создаем HTML для задач
         const tasksContainer = document.getElementById('tasksContainer');
-        tasksContainer.innerHTML = '';
+        if (tasksContainer) {
+            tasksContainer.innerHTML = '';
 
-        Object.keys(tasksBySphere).forEach(sphereName => {
-            const sphere = this.spheres.find(s => s.name === sphereName);
-            const tasks = tasksBySphere[sphereName];
-            const sphereProgress = this.calculateSphereProgress(sphereName, this.currentWeek);
+            Object.keys(tasksBySphere).forEach(sphereName => {
+                const sphere = this.spheres.find(s => s.name === sphereName);
+                const tasks = tasksBySphere[sphereName];
+                const sphereProgress = this.calculateSphereProgress(sphereName, this.currentWeek);
 
-            const group = document.createElement('div');
-            group.className = 'task-group';
+                const group = document.createElement('div');
+                group.className = 'task-group';
 
-            group.innerHTML = `
-                <div class="task-group__header">
-                    <h3 class="task-group__title" style="color: ${sphere.color}">
-                        ${sphereName}
-                    </h3>
-                    <span class="task-group__progress">
-                        ${Math.round(sphereProgress)}%
-                    </span>
-                </div>
-                <div class="tasks-list">
-                    ${tasks.map(task => this.createTaskHTML(task, this.currentWeek)).join('')}
-                </div>
-            `;
+                group.innerHTML = `
+                    <div class="task-group__header">
+                        <h3 class="task-group__title" style="color: ${sphere.color}">
+                            ${sphereName}
+                        </h3>
+                        <span class="task-group__progress">
+                            ${Math.round(sphereProgress)}%
+                        </span>
+                    </div>
+                    <div class="tasks-list">
+                        ${tasks.map(task => this.createTaskHTML(task, this.currentWeek)).join('')}
+                    </div>
+                `;
 
-            tasksContainer.appendChild(group);
-        });
-
-        // Добавляем обработчики чекбоксов
-        document.querySelectorAll('.task-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', (e) => {
-                this.toggleTask(e.target.dataset.taskId, this.currentWeek, e.target.checked);
-                this.updateDashboard();
+                tasksContainer.appendChild(group);
             });
-        });
+
+            // Добавляем обработчики чекбоксов
+            document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', (e) => {
+                    this.toggleTask(e.target.dataset.taskId, this.currentWeek, e.target.checked);
+                    this.updateDashboard();
+                });
+            });
+        }
     }
 
     createTaskHTML(task, week) {
@@ -330,12 +478,14 @@ class LifePlanner {
 
     updateHabitsView() {
         const habitsGrid = document.getElementById('habitsGrid');
-        habitsGrid.innerHTML = '';
+        if (habitsGrid) {
+            habitsGrid.innerHTML = '';
 
-        this.dailyHabits.forEach(habit => {
-            const card = this.createHabitCard(habit);
-            habitsGrid.appendChild(card);
-        });
+            this.dailyHabits.forEach(habit => {
+                const card = this.createHabitCard(habit);
+                habitsGrid.appendChild(card);
+            });
+        }
     }
 
     createHabitCard(habit) {
@@ -384,7 +534,9 @@ class LifePlanner {
 
     updateRetrospectiveView() {
         const form = document.getElementById('retrospectiveForm');
-        const retrospective = this.data.retrospectives[this.currentWeek] || {};
+        if (!form) return;
+
+        const retrospective = this.data.retrospectives?.[this.currentWeek] || {};
 
         form.innerHTML = `
             <div class="form-group">
@@ -442,7 +594,7 @@ class LifePlanner {
         this.data.retrospectives[this.currentWeek] = data;
         this.saveData();
 
-        this.showModal('Ретроспектива сохранена', 'Ваши заметки за неделю сохранены!');
+        this.showNotification('Ретроспектива сохранена!', 'success');
     }
 
     // Вспомогательные методы
@@ -478,20 +630,22 @@ class LifePlanner {
     }
 
     isTaskCompleted(taskId, week) {
-        return this.data.tasks[`${taskId}_${week}`] || false;
+        return this.data.tasks?.[`${taskId}_${week}`] || false;
     }
 
     toggleTask(taskId, week, completed) {
+        if (!this.data.tasks) this.data.tasks = {};
         this.data.tasks[`${taskId}_${week}`] = completed;
         this.saveData();
     }
 
     isHabitCompleted(habitId, date) {
         const dateStr = date.toISOString().split('T')[0];
-        return this.data.habits[`${habitId}_${dateStr}`] || false;
+        return this.data.habits?.[`${habitId}_${dateStr}`] || false;
     }
 
     toggleHabit(habitId, dateStr) {
+        if (!this.data.habits) this.data.habits = {};
         const key = `${habitId}_${dateStr}`;
         this.data.habits[key] = !this.data.habits[key];
         this.saveData();
@@ -565,7 +719,8 @@ class LifePlanner {
         return {
             tasks: {},
             habits: {},
-            retrospectives: {}
+            retrospectives: {},
+            customGoals: {}
         };
     }
 
@@ -586,7 +741,7 @@ class LifePlanner {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
 
-        this.showModal('Экспорт завершён', 'Данные сохранены в файл на вашем устройстве');
+        this.showNotification('Данные экспортированы!', 'success');
     }
 
     importData(file) {
@@ -599,28 +754,16 @@ class LifePlanner {
                 this.data = { ...this.data, ...importedData };
                 this.saveData();
                 this.init();
-                this.showModal('Импорт завершён', 'Данные успешно загружены');
+                this.showNotification('Данные успешно импортированы!', 'success');
             } catch (error) {
-                this.showModal('Ошибка импорта', 'Не удалось загрузить файл. Проверьте формат данных.');
+                this.showNotification('Ошибка импорта файла', 'error');
             }
         };
         reader.readAsText(file);
     }
 
-    showModal(title, message) {
-        const modal = document.getElementById('modal');
-        const modalBody = document.getElementById('modalBody');
-
-        modalBody.innerHTML = `
-            <h3>${title}</h3>
-            <p>${message}</p>
-        `;
-
-        modal.classList.add('modal--active');
-    }
-
     closeModal() {
-        document.getElementById('modal').classList.remove('modal--active');
+        document.getElementById('modal')?.classList.remove('modal--active');
     }
 }
 
