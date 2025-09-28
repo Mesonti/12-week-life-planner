@@ -310,7 +310,7 @@ class LifePlanner {
                 </div>
                 <div class="modal-actions">
                     <button class="btn btn--primary" onclick="app.saveNewGoal('${sphereName}')">
-                        ➕ Добавить цель
+                        Добавить цель
                     </button>
                     <button class="btn btn--secondary" onclick="app.closeModal()">
                         Отмена
